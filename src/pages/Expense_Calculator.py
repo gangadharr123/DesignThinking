@@ -90,6 +90,8 @@ def main():
                 index=list(COST_DATA.keys()).index(st.session_state.selected_country) if st.session_state.selected_country in COST_DATA else 0,
                 help="Select your study destination"
             )
+            country_info = get_country_info()
+            currency_symbol = country_info[country]['symbol']
             
             lifestyle = st.selectbox(
                 "Lifestyle Preference",
@@ -249,7 +251,7 @@ def main():
             <div class="metric-card">
                 <div class="metric-content">
                     <h3>Monthly Total</h3>
-                    <div class="metric-value">${total_monthly:,.0f}</div>
+                    <div class="metric-value">{format_currency(total_monthly, country)}</div>
                     <div class="metric-change neutral">{country}</div>
                 </div>
             </div>
@@ -260,7 +262,7 @@ def main():
             <div class="metric-card">
                 <div class="metric-content">
                     <h3>Yearly Total</h3>
-                    <div class="metric-value">${total_yearly:,.0f}</div>
+                    <div class="metric-value">{format_currency(total_yearly, country)}</div>
                     <div class="metric-change neutral">{lifestyle.title()} lifestyle</div>
                 </div>
             </div>
@@ -314,7 +316,7 @@ def main():
                 <div class="expense-header">
                     <span class="expense-icon">{icon}</span>
                     <span class="expense-name">{name}</span>
-                    <span class="expense-amount">${amount:,.0f}</span>
+                    <span class="expense-amount">{format_currency(amount, country)}</span>
                 </div>
                 <div class="expense-bar">
                     <div class="expense-fill" style="width: {percentage:.1f}%"></div>
@@ -351,8 +353,8 @@ def main():
             st.markdown(f"""
             <div class="{card_class}">
                 <h4>{data['Country']}</h4>
-                <div class="comparison-monthly">${data['Monthly Cost']:,.0f}/month</div>
-                <div class="comparison-yearly">${data['Yearly Cost']:,.0f}/year</div>
+                <div class="comparison-monthly">{get_country_info()[data['Country']]['symbol']}{data['Monthly Cost']:,.0f}/month</div>
+                <div class="comparison-yearly">{get_country_info()[data['Country']]['symbol']}{data['Yearly Cost']:,.0f}/year</div>
                 <div class="comparison-lifestyle">{lifestyle.title()} lifestyle</div>
             </div>
             """, unsafe_allow_html=True)
@@ -401,7 +403,7 @@ def main():
     st.markdown(f"""
     <div class="emergency-fund-card">
         <h4>💰 Recommended Emergency Fund</h4>
-        <div class="emergency-amount">${emergency_fund:,.0f}</div>
+        <div class="emergency-amount">{format_currency(emergency_fund, country)}</div>
         <div class="emergency-description">
             Having 3 months of expenses saved can help you handle unexpected situations like 
             medical emergencies, travel costs, or temporary income loss.
