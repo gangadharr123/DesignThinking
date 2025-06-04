@@ -6,17 +6,7 @@ import os
 def configure_for_hf_spaces():
     """Configure the app for Hugging Face Spaces deployment"""
     
-    # Set page config for HF Spaces
-    if not hasattr(st, '_is_running_with_streamlit'):
-        st.set_page_config(
-            page_title="StudyAbroad Platform",
-            page_icon="🎓",
-            layout="wide",
-            initial_sidebar_state="expanded",
-            menu_items={
-                'About': "International Student Platform - Your comprehensive tool for studying abroad"
-            }
-        )
+    # Page configuration is handled in streamlit_app.py
     
     # Environment-specific configurations
     if os.getenv('SPACE_ID'):  # Running on HF Spaces
