@@ -1,6 +1,8 @@
 import streamlit as st
 import os
 from pathlib import Path
+import json
+import hashlib
 
 def load_css():
     """Load custom CSS styles"""
@@ -12,9 +14,38 @@ def load_css():
     except FileNotFoundError:
         st.warning("CSS file not found. Using default styling.")
 
+USERS_FILE = Path(__file__).parent / "users.json"
+
+def load_users():
+    """Load user data from the JSON file"""
+    if USERS_FILE.exists():
+        with USERS_FILE.open("r") as f:
+            return json.load(f)
+    return []
+
+def save_users(users):
+    """Save user data to the JSON file"""
+    with USERS_FILE.open("w") as f:
+        json.dump(users, f, indent=4)
+
+def register_user(username, password):
+    """Register a new user. Returns (success, message)."""
+    users = load_users()
+    if any(u["username"] == username for u in users):
+        return False, "Username already exists."
+    hashed = hashlib.sha256(password.encode()).hexdigest()
+    users.append({"username": username, "password": hashed})
+    save_users(users)
+    return True, "Registration successful."
+
 def check_login(username, password):
     """Check login credentials"""
-    return username == "student" and password == "student"
+    users = load_users()
+    hashed = hashlib.sha256(password.encode()).hexdigest()
+    for user in users:
+        if user["username"] == username and user["password"] == hashed:
+            return True
+    return False
 
 def check_authentication():
     """Check if user is authenticated, redirect to login if not"""

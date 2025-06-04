@@ -111,7 +111,8 @@ def login_page():
                     st.success("Login successful! Redirecting...")
                     st.rerun()
                 else:
-                    st.error("Invalid credentials. Use username: 'student', password: 'student'")
+                    st.error("Invalid username or password.")
+        st.page_link("pages/Register.py", label="Create a new account")
 
 def dashboard():
     st.markdown("""
