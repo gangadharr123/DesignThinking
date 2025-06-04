@@ -1,6 +1,6 @@
 import streamlit as st
 from datetime import datetime, timedelta
-from utils import load_css, check_authentication
+from utils import load_css, check_authentication, get_country_info
 
 # Page configuration
 st.set_page_config(page_title="Job Board", page_icon="💼", layout="wide")
@@ -10,6 +10,9 @@ load_css()
 
 # Check authentication
 check_authentication()
+
+country_info = get_country_info()
+currency_symbol = country_info[st.session_state.selected_country]['symbol']
 
 # Initialize job data
 if 'job_listings' not in st.session_state:
@@ -212,7 +215,12 @@ def main():
     if sort_by == "Newest":
         filtered_jobs = sorted(filtered_jobs, key=lambda x: x['posted'], reverse=True)
     elif sort_by == "Pay (High to Low)":
-        filtered_jobs = sorted(filtered_jobs, key=lambda x: int(x['pay'].split('$')[1].split('/')[0]), reverse=True)
+        import re
+        filtered_jobs = sorted(
+            filtered_jobs,
+            key=lambda x: float(re.findall(r"\d+(?:\.\d+)?", x['pay'])[0]),
+            reverse=True,
+        )
     elif sort_by == "Deadline":
         filtered_jobs = sorted(filtered_jobs, key=lambda x: x['deadline'])
     
@@ -257,7 +265,7 @@ def main():
                     </div>
                     <div class="job-detail-item">
                         <span class="detail-icon">💰</span>
-                        <span class="detail-text">{job['pay']}</span>
+                        <span class="detail-text">{job['pay'].replace('$', currency_symbol)}</span>
                     </div>
                     <div class="job-detail-item">
                         <span class="detail-icon">📅</span>

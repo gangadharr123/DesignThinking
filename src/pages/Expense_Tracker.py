@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
-from utils import load_css, check_authentication, format_currency
+from utils import load_css, check_authentication, format_currency, get_country_info
 
 # Page configuration
 st.set_page_config(page_title="Expense Tracker", page_icon="💰", layout="wide")
@@ -13,6 +13,9 @@ load_css()
 
 # Check authentication
 check_authentication()
+
+country_info = get_country_info()
+currency_symbol = country_info[st.session_state.selected_country]['symbol']
 
 # Initialize expense data in session state
 if 'expenses' not in st.session_state:
@@ -43,7 +46,7 @@ def main():
     
     # Back to dashboard button
     if st.button("← Back to Dashboard", key="back_to_dashboard"):
-        st.switch_page("app.py")
+        st.switch_page("streamlit_app.py")
     
     st.title("💰 Expense Tracker")
     st.markdown("Track your daily expenses and monitor your budget")
@@ -78,7 +81,7 @@ def main():
         <div class="metric-card">
             <div class="metric-content">
                 <h3>Total Budget</h3>
-                <div class="metric-value">${total_budget:,.2f}</div>
+                <div class="metric-value">{format_currency(total_budget)}</div>
                 <div class="metric-change neutral">Monthly allocation</div>
             </div>
         </div>
@@ -89,7 +92,7 @@ def main():
         <div class="metric-card">
             <div class="metric-content">
                 <h3>Total Spent</h3>
-                <div class="metric-value">${total_spent:,.2f}</div>
+                <div class="metric-value">{format_currency(total_spent)}</div>
                 <div class="metric-change {'positive' if total_spent <= total_budget * 0.8 else 'negative'}">
                     {(total_spent/total_budget)*100:.1f}% of budget
                 </div>
@@ -102,7 +105,7 @@ def main():
         <div class="metric-card">
             <div class="metric-content">
                 <h3>Remaining</h3>
-                <div class="metric-value">${remaining:,.2f}</div>
+                <div class="metric-value">{format_currency(remaining)}</div>
                 <div class="metric-change {'positive' if remaining > 0 else 'negative'}">
                     {'Under budget' if remaining > 0 else 'Over budget'}
                 </div>
@@ -120,7 +123,7 @@ def main():
         with st.form("expense_form"):
             date = st.date_input("Date", datetime.now())
             category = st.selectbox("Category", list(st.session_state.budget.keys()))
-            amount = st.number_input("Amount ($)", min_value=0.01, step=0.01)
+            amount = st.number_input(f"Amount ({currency_symbol})", min_value=0.01, step=0.01)
             description = st.text_input("Description")
             
             if st.form_submit_button("Add Expense", use_container_width=True):
@@ -144,7 +147,7 @@ def main():
             new_budget = {}
             for category, current_amount in st.session_state.budget.items():
                 new_budget[category] = st.number_input(
-                    f"{category} ($)", 
+                    f"{category} ({currency_symbol})",
                     min_value=0.0, 
                     value=float(current_amount),
                     step=10.0
@@ -174,7 +177,7 @@ def main():
                 st.markdown(f"""
                 <div class="category-card">
                     <h4>{category}</h4>
-                    <div class="category-amount">${spent:.2f} / ${budget:.2f}</div>
+                      <div class="category-amount">{format_currency(spent)} / {format_currency(budget)}</div>
                     <div class="progress-bar">
                         <div class="progress-fill {status}" style="width: {min(percentage, 100):.1f}%"></div>
                     </div>
@@ -238,7 +241,7 @@ def main():
                     </div>
                     <div class="transaction-details">
                         <span class="transaction-date">{expense['date']}</span>
-                        <span class="transaction-amount">${expense['amount']:.2f}</span>
+                        <span class="transaction-amount">{format_currency(expense['amount'])}</span>
                     </div>
                 </div>
             </div>

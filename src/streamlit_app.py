@@ -366,7 +366,7 @@ def dashboard():
     st.subheader("Recent Activity")
     
     activity_data = [
-        {"time": "2 hours ago", "action": "Added expense: Groceries - $45.50", "type": "expense"},
+        {"time": "2 hours ago", "action": f"Added expense: Groceries - {format_currency(45.50)}", "type": "expense"},
         {"time": "1 day ago", "action": "Uploaded visa document: Bank Statement", "type": "visa"},
         {"time": "2 days ago", "action": "Posted in Community: Housing Tips", "type": "community"},
         {"time": "3 days ago", "action": "Applied for part-time job: Campus Library", "type": "job"}
