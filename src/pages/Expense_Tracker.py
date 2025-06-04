@@ -247,5 +247,5 @@ def main():
             </div>
             """, unsafe_allow_html=True)
 
-if __name__ == "__main__":
-    main()
+# Execute the page logic when imported by Streamlit
+main()
