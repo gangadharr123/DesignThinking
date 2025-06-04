@@ -3,7 +3,14 @@ import pandas as pd
 from datetime import datetime, timedelta
 import plotly.express as px
 import plotly.graph_objects as go
-from utils import load_css, check_login, initialize_session_state, format_currency, get_country_info
+from utils import (
+    load_css,
+    check_login,
+    initialize_session_state,
+    format_currency,
+    get_country_info,
+)
+from app_config import configure_for_hf_spaces, check_dependencies
 
 def calculate_user_progress():
     """Calculate user progress for gamification"""
@@ -35,13 +42,18 @@ def calculate_user_progress():
     
     return progress
 
+# Verify dependencies before continuing
+if not check_dependencies():
+    st.stop()
+
 # Page configuration
 st.set_page_config(
     page_title="StudyAbroad Platform",
     page_icon="🎓",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
+configure_for_hf_spaces()
 
 # Load custom CSS
 load_css()
