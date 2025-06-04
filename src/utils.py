@@ -1,12 +1,14 @@
 import streamlit as st
 import os
+from pathlib import Path
 
 def load_css():
     """Load custom CSS styles"""
     try:
-        with open('styles.css', 'r') as f:
+        css_path = Path(__file__).parent / "styles.css"
+        with css_path.open() as f:
             css = f.read()
-        st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
     except FileNotFoundError:
         st.warning("CSS file not found. Using default styling.")
 
