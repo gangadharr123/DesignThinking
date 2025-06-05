@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-from utils import load_css, check_authentication, format_currency, get_country_info, get_housing_options
+from utils import load_css, check_authentication, format_currency, get_country_info, get_housing_options, render_sidebar
 
 # Page configuration
 st.set_page_config(page_title="Visa Planner", page_icon="📋", layout="wide")
@@ -12,21 +12,7 @@ load_css()
 # Check authentication
 check_authentication()
 
-if st.session_state.get("logged_in", False):
-    with st.sidebar:
-        st.header("Navigation")
-        if st.button("Dashboard"):
-            st.switch_page("streamlit_app.py")
-        if st.button("Expense Tracker"):
-            st.switch_page("pages/Expense_Tracker.py")
-        if st.button("Expense Calculator"):
-            st.switch_page("pages/Expense_Calculator.py")
-        if st.button("Visa Planner"):
-            st.switch_page("pages/Visa_Planner.py")
-        if st.button("Community"):
-            st.switch_page("pages/Community.py")
-        if st.button("Job Board"):
-            st.switch_page("pages/Job_Board.py")
+render_sidebar()
 
 # Initialize visa data
 if 'visa_documents' not in st.session_state:
