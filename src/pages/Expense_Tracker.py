@@ -128,7 +128,9 @@ def main():
 
     if remaining > 0 and suggestion:
         st.info(f"With your savings, you could afford {suggestion}.")
-    
+
+    st.markdown("---")
+
     # Two columns layout
     col1, col2 = st.columns([1, 1])
 
@@ -171,8 +173,9 @@ def main():
                     st.json(new_budget)
                     st.success("Budget updated successfully!")
                     st.rerun()
-    
-    
+
+    st.markdown("---")
+
     if not df_expenses.empty:
         with st.expander("Category Breakdown", expanded=False):
             categories = list(st.session_state.budget.keys())
@@ -216,7 +219,9 @@ def main():
                     )
                     fig_line.update_layout(font=dict(size=12), height=400, xaxis_title="Date", yaxis_title="Amount")
                     st.plotly_chart(fig_line, use_container_width=True)
-    
+
+    st.markdown("---")
+
     # Recent transactions
     with st.expander("Recent Transactions", expanded=False):
         if df_expenses.empty:
