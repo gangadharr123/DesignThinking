@@ -182,7 +182,9 @@ def main():
             </div>
         </div>
         """, unsafe_allow_html=True)
-    
+
+    st.markdown("---")
+
     # Filters
     st.subheader("🔍 Filter Jobs")
     
@@ -226,7 +228,9 @@ def main():
         )
     elif sort_by == "Deadline":
         filtered_jobs = sorted(filtered_jobs, key=lambda x: x['deadline'])
-    
+
+    st.markdown("---")
+
     # Job listings
     st.subheader(f"📋 Job Listings ({len(filtered_jobs)} found)")
     
@@ -259,14 +263,18 @@ def main():
                         st.session_state.job_applications.append(application)
                         st.success("Application submitted successfully!")
                         st.rerun()
-    
+
+    st.markdown("---")
+
     # My Applications section
     if st.session_state.job_applications:
         st.subheader("📋 My Applications")
         
         for app in st.session_state.job_applications:
             st.write(f"{app['job_title']} at {app['company']} - {app['status']} (Applied: {app['applied_date']})")
-    
+
+    st.markdown("---")
+
     # Job search tips
     st.subheader("💡 Job Search Tips for International Students")
     
@@ -287,7 +295,9 @@ def main():
             <span class="tip-text">{tip}</span>
         </div>
         """, unsafe_allow_html=True)
-    
+
+    st.markdown("---")
+
     # Work authorization info
     st.subheader("📋 Work Authorization Quick Guide")
     
