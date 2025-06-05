@@ -288,7 +288,7 @@ def dashboard():
     st.markdown("Click on any feature to get started with your study abroad journey")
     
     # Feature buttons with navigation
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         if st.button("💰 Expense Tracker", key="expense_btn", use_container_width=True, type="primary"):
@@ -357,7 +357,22 @@ def dashboard():
             <p>✓ Work authorization help</p>
         </div>
         """, unsafe_allow_html=True)
-        
+
+
+    with col4:
+        if st.button("🎙️ Voice Assistant", key="assistant_btn", use_container_width=True, type="primary"):
+            st.switch_page("pages/Voice_Assistant.py")
+
+        st.markdown("""
+        <div class="feature-preview">
+            <h4>Ask Anything</h4>
+            <p>✓ Voice commands</p>
+            <p>✓ AI-powered responses</p>
+            <p>✓ Text-to-speech output</p>
+            <p>✓ Conversation history</p>
+        </div>
+        """, unsafe_allow_html=True)
+
         # Achievement badge
         st.markdown("""
         <div class="achievement-badge">

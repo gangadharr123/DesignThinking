@@ -355,9 +355,11 @@ def render_sidebar():
         st.page_link("pages/Visa_Planner.py", label="Visa Planner")
         st.page_link("pages/Community.py", label="Community")
         st.page_link("pages/Job_Board.py", label="Job Board")
+        st.page_link("pages/Voice_Assistant.py", label="Voice Assistant")
 
         st.markdown("---")
         st.header("Quick Actions")
         st.page_link("pages/Expense_Tracker.py", label="Add Expense")
         st.page_link("pages/Community.py", label="Create Post")
         st.page_link("pages/Job_Board.py", label="Apply for Job")
+        st.page_link("pages/Voice_Assistant.py", label="Ask Assistant")
