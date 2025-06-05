@@ -98,30 +98,29 @@ def main():
         col1, col2 = st.columns([1, 1])
         
         with col1:
-            st.subheader("📍 Select Your Destination")
-            
-            country = st.selectbox(
-                "Country",
-                list(COST_DATA.keys()),
-                index=list(COST_DATA.keys()).index(st.session_state.selected_country) if st.session_state.selected_country in COST_DATA else 0,
-                help="Select your study destination"
-            )
-            country_info = get_country_info()
-            currency_symbol = country_info[country]['symbol']
-            
-            lifestyle = st.selectbox(
-                "Lifestyle Preference",
-                ["budget", "moderate", "comfortable"],
-                format_func=lambda x: {
-                    "budget": "💰 Budget - Essential needs only",
-                    "moderate": "🏠 Moderate - Balanced lifestyle", 
-                    "comfortable": "✨ Comfortable - Higher quality living"
-                }[x],
-                help="Choose your preferred lifestyle level"
-            )
-            
-            st.subheader("🎯 Customize Your Expenses")
-            st.markdown("Adjust the base estimates according to your specific needs:")
+            with st.expander("📍 Select Destination & Lifestyle", expanded=True):
+                country = st.selectbox(
+                    "Country",
+                    list(COST_DATA.keys()),
+                    index=list(COST_DATA.keys()).index(st.session_state.selected_country) if st.session_state.selected_country in COST_DATA else 0,
+                    help="Select your study destination"
+                )
+                country_info = get_country_info()
+                currency_symbol = country_info[country]['symbol']
+
+                lifestyle = st.selectbox(
+                    "Lifestyle Preference",
+                    ["budget", "moderate", "comfortable"],
+                    format_func=lambda x: {
+                        "budget": "💰 Budget - Essential needs only",
+                        "moderate": "🏠 Moderate - Balanced lifestyle",
+                        "comfortable": "✨ Comfortable - Higher quality living"
+                    }[x],
+                    help="Choose your preferred lifestyle level"
+                )
+
+            with st.expander("🎯 Customize Your Expenses", expanded=True):
+                st.markdown("Adjust the base estimates according to your specific needs:")
             
             # Get base costs
             base_costs = COST_DATA[country][lifestyle].copy()
@@ -187,16 +186,17 @@ def main():
         col1, col2 = st.columns([1, 1])
         
         with col1:
-            st.subheader("📍 Your Custom Budget")
-            st.markdown("Set your own budget ranges for each category:")
+            with st.expander("🎯 Customize Your Expenses", expanded=True):
+                st.subheader("📍 Your Custom Budget")
+                st.markdown("Set your own budget ranges for each category:")
             
-            country = st.session_state.selected_country
-            country_info = get_country_info()
-            currency_symbol = country_info[country]['symbol']
+                country = st.session_state.selected_country
+                country_info = get_country_info()
+                currency_symbol = country_info[country]['symbol']
             
-            custom_costs = {}
+                custom_costs = {}
             
-            custom_costs['rent'] = st.number_input(
+                custom_costs['rent'] = st.number_input(
                 f"🏠 Rent & Accommodation ({currency_symbol})",
                 min_value=0,
                 max_value=5000,
@@ -205,7 +205,7 @@ def main():
                 help="Set your preferred monthly rent budget"
             )
             
-            custom_costs['food'] = st.number_input(
+                custom_costs['food'] = st.number_input(
                 f"🍽️ Food & Groceries ({currency_symbol})",
                 min_value=0,
                 max_value=1000,
@@ -214,7 +214,7 @@ def main():
                 help="Set your monthly food budget"
             )
             
-            custom_costs['transport'] = st.number_input(
+                custom_costs['transport'] = st.number_input(
                 f"🚌 Transportation ({currency_symbol})",
                 min_value=0,
                 max_value=500,
@@ -223,7 +223,7 @@ def main():
                 help="Set your monthly transport budget"
             )
             
-            custom_costs['utilities'] = st.number_input(
+                custom_costs['utilities'] = st.number_input(
                 f"⚡ Utilities ({currency_symbol})",
                 min_value=0,
                 max_value=400,
@@ -232,7 +232,7 @@ def main():
                 help="Set your monthly utilities budget"
             )
             
-            custom_costs['entertainment'] = st.number_input(
+                custom_costs['entertainment'] = st.number_input(
                 f"🎉 Entertainment & Social ({currency_symbol})",
                 min_value=0,
                 max_value=800,
@@ -241,7 +241,7 @@ def main():
                 help="Set your monthly entertainment budget"
             )
             
-            custom_costs['other'] = st.number_input(
+                custom_costs['other'] = st.number_input(
                 f"🛍️ Other Expenses ({currency_symbol})",
                 min_value=0,
                 max_value=500,
@@ -250,7 +250,7 @@ def main():
                 help="Set your budget for miscellaneous expenses"
             )
             
-            lifestyle = "custom"  # Set lifestyle for custom mode
+                lifestyle = "custom"  # Set lifestyle for custom mode
     
     with col2:
         st.subheader("💰 Your Monthly Budget Breakdown")
@@ -283,102 +283,100 @@ def main():
                 </div>
             </div>
             """, unsafe_allow_html=True)
+
+        with st.expander("Monthly Budget Breakdown", expanded=False):
+            st.subheader("📊 Expense Breakdown")
+
+            # Create pie chart
+            categories = list(custom_costs.keys())
+            amounts = list(custom_costs.values())
         
-        # Category breakdown chart
-        st.subheader("📊 Expense Breakdown")
-        
-        # Create pie chart
-        categories = list(custom_costs.keys())
-        amounts = list(custom_costs.values())
-        
-        # Format category names
-        category_labels = {
-            'rent': '🏠 Rent',
-            'food': '🍽️ Food',
-            'transport': '🚌 Transport',
-            'utilities': '⚡ Utilities',
-            'entertainment': '🎉 Entertainment',
-            'other': '🛍️ Other'
-        }
-        
-        formatted_labels = [category_labels[cat] for cat in categories]
-        
-        fig_pie = px.pie(
-            values=amounts,
-            names=formatted_labels,
-            title="Monthly Expense Distribution",
-            color_discrete_sequence=px.colors.qualitative.Set3
-        )
-        
-        fig_pie.update_traces(textposition='inside', textinfo='percent+label')
-        fig_pie.update_layout(
-            font=dict(size=12),
-            showlegend=True,
-            height=400
-        )
-        
-        st.plotly_chart(fig_pie, use_container_width=True)
-        
-        # Detailed breakdown
-        st.subheader("📋 Detailed Breakdown")
-        
-        for category, amount in custom_costs.items():
-            percentage = (amount / total_monthly) * 100
-            icon = category_labels[category].split()[0]
-            name = category_labels[category].split()[1]
-            
-            st.markdown(f"""
-            <div class="expense-breakdown-item">
-                <div class="expense-header">
-                    <span class="expense-icon">{icon}</span>
-                    <span class="expense-name">{name}</span>
-                    <span class="expense-amount">{format_currency(amount, country)}</span>
+            # Format category names
+            category_labels = {
+                'rent': '🏠 Rent',
+                'food': '🍽️ Food',
+                'transport': '🚌 Transport',
+                'utilities': '⚡ Utilities',
+                'entertainment': '🎉 Entertainment',
+                'other': '🛍️ Other'
+            }
+
+            formatted_labels = [category_labels[cat] for cat in categories]
+
+            fig_pie = px.pie(
+                values=amounts,
+                names=formatted_labels,
+                title="Monthly Expense Distribution",
+                color_discrete_sequence=px.colors.qualitative.Set3
+            )
+
+            fig_pie.update_traces(textposition='inside', textinfo='percent+label')
+            fig_pie.update_layout(
+                font=dict(size=12),
+                showlegend=True,
+                height=400
+            )
+
+            st.plotly_chart(fig_pie, use_container_width=True)
+
+            # Detailed breakdown
+            st.subheader("📋 Detailed Breakdown")
+
+            for category, amount in custom_costs.items():
+                percentage = (amount / total_monthly) * 100
+                icon = category_labels[category].split()[0]
+                name = category_labels[category].split()[1]
+
+                st.markdown(f"""
+                <div class="expense-breakdown-item">
+                    <div class="expense-header">
+                        <span class="expense-icon">{icon}</span>
+                        <span class="expense-name">{name}</span>
+                        <span class="expense-amount">{format_currency(amount, country)}</span>
+                    </div>
+                    <div class="expense-bar">
+                        <div class="expense-fill" style="width: {percentage:.1f}%"></div>
+                    </div>
+                    <div class="expense-percentage">{percentage:.1f}% of total budget</div>
                 </div>
-                <div class="expense-bar">
-                    <div class="expense-fill" style="width: {percentage:.1f}%"></div>
+                """, unsafe_allow_html=True)
+    
+    with st.expander("🌍 Country Comparison", expanded=False):
+        st.markdown("Compare costs across different countries for the same lifestyle")
+
+        # Create comparison data
+        comparison_data = []
+        for country_name, lifestyle_data in COST_DATA.items():
+            total_cost = sum(lifestyle_data[lifestyle].values())
+            comparison_data.append({
+                'Country': country_name,
+                'Monthly Cost': total_cost,
+                'Yearly Cost': total_cost * 12
+            })
+
+        # Sort by monthly cost
+        comparison_data.sort(key=lambda x: x['Monthly Cost'])
+
+        # Display comparison
+        cols = st.columns(len(comparison_data))
+
+        for i, data in enumerate(comparison_data):
+            with cols[i]:
+                is_selected = data['Country'] == country
+                card_class = "comparison-card selected" if is_selected else "comparison-card"
+
+                st.markdown(f"""
+                <div class="{card_class}">
+                    <h4>{data['Country']}</h4>
+                    <div class="comparison-monthly">{get_country_info()[data['Country']]['symbol']}{data['Monthly Cost']:,.0f}/month</div>
+                    <div class="comparison-yearly">{get_country_info()[data['Country']]['symbol']}{data['Yearly Cost']:,.0f}/year</div>
+                    <div class="comparison-lifestyle">{lifestyle.title()} lifestyle</div>
                 </div>
-                <div class="expense-percentage">{percentage:.1f}% of total budget</div>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    # Comparison section
-    st.subheader("🌍 Country Comparison")
-    st.markdown("Compare costs across different countries for the same lifestyle")
-    
-    # Create comparison data
-    comparison_data = []
-    for country_name, lifestyle_data in COST_DATA.items():
-        total_cost = sum(lifestyle_data[lifestyle].values())
-        comparison_data.append({
-            'Country': country_name,
-            'Monthly Cost': total_cost,
-            'Yearly Cost': total_cost * 12
-        })
-    
-    # Sort by monthly cost
-    comparison_data.sort(key=lambda x: x['Monthly Cost'])
-    
-    # Display comparison
-    cols = st.columns(len(comparison_data))
-    
-    for i, data in enumerate(comparison_data):
-        with cols[i]:
-            is_selected = data['Country'] == country
-            card_class = "comparison-card selected" if is_selected else "comparison-card"
-            
-            st.markdown(f"""
-            <div class="{card_class}">
-                <h4>{data['Country']}</h4>
-                <div class="comparison-monthly">{get_country_info()[data['Country']]['symbol']}{data['Monthly Cost']:,.0f}/month</div>
-                <div class="comparison-yearly">{get_country_info()[data['Country']]['symbol']}{data['Yearly Cost']:,.0f}/year</div>
-                <div class="comparison-lifestyle">{lifestyle.title()} lifestyle</div>
-            </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
     
     # Tips and recommendations
-    st.subheader("💡 Money-Saving Tips")
-    
-    tips_by_lifestyle = {
+    with st.expander("💡 Money-Saving Tips", expanded=False):
+        tips_by_lifestyle = {
         "budget": [
             "🏠 Consider shared accommodation or student dormitories",
             "🍽️ Cook at home and buy groceries in bulk",
@@ -402,30 +400,28 @@ def main():
         ]
     }
     
-    current_tips = tips_by_lifestyle[lifestyle]
+        current_tips = tips_by_lifestyle[lifestyle]
+
+        for tip in current_tips:
+            st.markdown(f"""
+            <div class="tip-item">
+                <span class="tip-text">{tip}</span>
+            </div>
+            """, unsafe_allow_html=True)
     
-    for tip in current_tips:
+    with st.expander("🚨 Emergency Fund Recommendation", expanded=False):
+        emergency_fund = total_monthly * 3  # 3 months of expenses
+
         st.markdown(f"""
-        <div class="tip-item">
-            <span class="tip-text">{tip}</span>
+        <div class="emergency-fund-card">
+            <h4>💰 Recommended Emergency Fund</h4>
+            <div class="emergency-amount">{format_currency(emergency_fund, country)}</div>
+            <div class="emergency-description">
+                Having 3 months of expenses saved can help you handle unexpected situations like
+                medical emergencies, travel costs, or temporary income loss.
+            </div>
         </div>
         """, unsafe_allow_html=True)
-    
-    # Emergency fund recommendation
-    st.subheader("🚨 Emergency Fund Recommendation")
-    
-    emergency_fund = total_monthly * 3  # 3 months of expenses
-    
-    st.markdown(f"""
-    <div class="emergency-fund-card">
-        <h4>💰 Recommended Emergency Fund</h4>
-        <div class="emergency-amount">{format_currency(emergency_fund, country)}</div>
-        <div class="emergency-description">
-            Having 3 months of expenses saved can help you handle unexpected situations like 
-            medical emergencies, travel costs, or temporary income loss.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
 
 # Execute the page logic
 if __name__ == "__main__":
