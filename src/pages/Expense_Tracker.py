@@ -142,16 +142,14 @@ def main():
         with st.expander("Manage Budget", expanded=False):
             with st.form("budget_form"):
                 st.markdown("Update your monthly budget allocations:")
-            
-            new_budget = {}
-            for category, current_amount in st.session_state.budget.items():
-                new_budget[category] = st.number_input(
-                    f"{category} ({currency_symbol})",
-                    min_value=0.0, 
-                    value=float(current_amount),
-                    step=10.0
-                )
-            
+                new_budget = {}
+                for category, current_amount in st.session_state.budget.items():
+                    new_budget[category] = st.number_input(
+                        f"{category} ({currency_symbol})",
+                        min_value=0.0,
+                        value=float(current_amount),
+                        step=10.0,
+                    )
                 if st.form_submit_button("Update Budget", use_container_width=True):
                     st.session_state.budget = new_budget
                     new_total = sum(new_budget.values())
