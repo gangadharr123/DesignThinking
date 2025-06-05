@@ -76,6 +76,16 @@ def main():
     total_budget = sum(st.session_state.budget.values())
     total_spent = sum(spent_by_category.values())
     remaining = total_budget - total_spent
+
+    suggestions = [
+        (50, "a nice dinner out"),
+        (200, "a weekend getaway"),
+        (500, "a budget laptop"),
+    ]
+    suggestion = None
+    for limit, text in suggestions:
+        if remaining >= limit:
+            suggestion = text
     
     col1, col2, col3 = st.columns(3)
     
@@ -115,6 +125,9 @@ def main():
             </div>
         </div>
         """, unsafe_allow_html=True)
+
+    if remaining > 0 and suggestion:
+        st.info(f"With your savings, you could afford {suggestion}.")
     
     # Two columns layout
     col1, col2 = st.columns([1, 1])
