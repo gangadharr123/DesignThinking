@@ -3,7 +3,7 @@ from typing import Optional
 
 import speech_recognition as sr
 from gtts import gTTS
-import openai
+import google.generativeai as genai
 
 
 def record_audio(timeout: int = 5, phrase_time_limit: int = 10) -> sr.AudioData:
@@ -25,16 +25,14 @@ def transcribe_audio(audio: sr.AudioData) -> str:
         return ""
 
 
-def generate_response(prompt: str, api_key: Optional[str] = None, model: str = "gpt-3.5-turbo") -> str:
-    """Generate a response using the OpenAI API."""
+def generate_response(prompt: str, api_key: Optional[str] = None, model: str = "gemini-pro") -> str:
+    """Generate a response using the Gemini API."""
     if api_key:
-        openai.api_key = api_key
+        genai.configure(api_key=api_key)
     try:
-        response = openai.ChatCompletion.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}]
-        )
-        return response.choices[0].message["content"].strip()
+        model = genai.GenerativeModel(model)
+        response = model.generate_content(prompt)
+        return response.text
     except Exception as e:
         return f"Error: {e}"
 

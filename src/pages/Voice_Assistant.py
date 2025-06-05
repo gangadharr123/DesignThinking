@@ -31,12 +31,12 @@ st.markdown("Talk to the assistant for quick answers to your questions.")
 if "conversation" not in st.session_state:
     st.session_state.conversation = []
 
-api_key = st.session_state.get("openai_key", st.secrets.get("OPENAI_API_KEY"))
-api_key_input = st.text_input(
-    "OpenAI API Key", type="password", value=api_key or "", help="Required for generating responses."
+gemini_key = st.session_state.get("gemini_key", st.secrets.get("GEMINI_API_KEY"))
+gemini_key_input = st.text_input(
+    "Gemini API Key", type="password", value=gemini_key or "", help="Required for generating responses."
 )
-if api_key_input:
-    st.session_state.openai_key = api_key_input
+if gemini_key_input:
+    st.session_state.gemini_key = gemini_key_input
 
 if st.button("Start Listening", use_container_width=True):
     with st.spinner("Listening..."):
@@ -48,7 +48,7 @@ if st.button("Start Listening", use_container_width=True):
             st.error(f"Error capturing audio: {e}")
     if text:
         st.session_state.conversation.append({"speaker": "You", "text": text})
-        response = generate_response(text, api_key=st.session_state.get("openai_key"))
+        response = generate_response(text, api_key=st.session_state.get("gemini_key"))
         audio_bytes = text_to_speech(response)
         st.session_state.conversation.append({"speaker": "Assistant", "text": response, "audio": audio_bytes})
     else:
