@@ -344,3 +344,35 @@ def restore_backup_data(backup_data):
     """Restore data from backup"""
     for key, value in backup_data.items():
         st.session_state[key] = value
+
+def render_sidebar():
+    """Render sidebar navigation and quick actions."""
+    if not st.session_state.get("logged_in", False):
+        return
+
+    with st.sidebar:
+        st.header("Navigation")
+        navigation = [
+            ("Dashboard", "streamlit_app.py"),
+            ("Expense Tracker", "pages/Expense_Tracker.py"),
+            ("Expense Calculator", "pages/Expense_Calculator.py"),
+            ("Visa Planner", "pages/Visa_Planner.py"),
+            ("Community", "pages/Community.py"),
+            ("Job Board", "pages/Job_Board.py"),
+        ]
+
+        for label, path in navigation:
+            if st.button(label):
+                st.switch_page(path)
+
+        st.markdown("---")
+        st.header("Quick Actions")
+        if st.button("Add Expense", key="qa_expense"):
+            st.switch_page("pages/Expense_Tracker.py")
+
+        if st.button("Create Post", key="qa_post"):
+            st.session_state.show_create_post = True
+            st.switch_page("pages/Community.py")
+
+        if st.button("Add Job Application", key="qa_job"):
+            st.switch_page("pages/Job_Board.py")
