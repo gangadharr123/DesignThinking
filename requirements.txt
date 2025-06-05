@@ -3,4 +3,4 @@ streamlit
 plotly
 SpeechRecognition
 gTTS
-openai
+google-generativeai

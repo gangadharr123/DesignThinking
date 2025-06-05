@@ -20,9 +20,11 @@ forums](https://discuss.streamlit.io).
 
 ## Voice Assistant
 
-The app includes a simple voice assistant powered by the OpenAI API. Navigate to
+The app includes a simple voice assistant powered by the Gemini API. Navigate to
 **Voice Assistant** from the sidebar or dashboard to start a conversation. You
-will need a valid OpenAI API key for generating responses.
+will need a valid Gemini API key for generating responses. Install the
+`google-generativeai` package listed in `requirements.txt` to enable the Gemini
+client.
 
 1. Enter your API key when prompted.
 2. Click **Start Listening** to record your question.
