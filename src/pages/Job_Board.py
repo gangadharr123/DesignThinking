@@ -1,6 +1,6 @@
 import streamlit as st
 from datetime import datetime, timedelta
-from utils import load_css, check_authentication, get_country_info
+from utils import load_css, check_authentication, get_country_info, render_sidebar
 
 # Page configuration
 st.set_page_config(page_title="Job Board", page_icon="💼", layout="wide")
@@ -12,20 +12,7 @@ load_css()
 check_authentication()
 
 if st.session_state.get("logged_in", False):
-    with st.sidebar:
-        st.header("Navigation")
-        if st.button("Dashboard"):
-            st.switch_page("streamlit_app.py")
-        if st.button("Expense Tracker"):
-            st.switch_page("pages/Expense_Tracker.py")
-        if st.button("Expense Calculator"):
-            st.switch_page("pages/Expense_Calculator.py")
-        if st.button("Visa Planner"):
-            st.switch_page("pages/Visa_Planner.py")
-        if st.button("Community"):
-            st.switch_page("pages/Community.py")
-        if st.button("Job Board"):
-            st.switch_page("pages/Job_Board.py")
+    render_sidebar()
 
 country_info = get_country_info()
 currency_symbol = country_info[st.session_state.selected_country]['symbol']
@@ -247,70 +234,21 @@ def main():
         st.info("No jobs found matching your criteria. Try adjusting the filters.")
     else:
         for job in filtered_jobs:
-            # Calculate days until deadline
             deadline_date = datetime.strptime(job['deadline'], '%Y-%m-%d')
             days_until_deadline = (deadline_date - datetime.now()).days
-            
-            # Check if already applied
             already_applied = job['id'] in [app['job_id'] for app in st.session_state.job_applications]
-            
-            # Job card
-            st.markdown(f"""
-            <div class="job-card">
-                <div class="job-header">
-                    <div class="job-title-section">
-                        <h4 class="job-title">{job['title']}</h4>
-                        <div class="job-company">{job['company']}</div>
-                    </div>
-                    <div class="job-badges">
-                        <span class="badge {job['category'].lower().replace('-', '')}">{job['category']}</span>
-                        <span class="badge type">{job['type']}</span>
-                        {f'<span class="badge remote">Remote</span>' if job['remote'] else ''}
-                        {f'<span class="badge student-friendly">Student Friendly</span>' if job['student_friendly'] else ''}
-                    </div>
-                </div>
-                
-                <div class="job-details">
-                    <div class="job-detail-item">
-                        <span class="detail-icon">📍</span>
-                        <span class="detail-text">{job['location']}</span>
-                    </div>
-                    <div class="job-detail-item">
-                        <span class="detail-icon">⏰</span>
-                        <span class="detail-text">{job['hours']}</span>
-                    </div>
-                    <div class="job-detail-item">
-                        <span class="detail-icon">💰</span>
-                        <span class="detail-text">{job['pay'].replace('$', currency_symbol)}</span>
-                    </div>
-                    <div class="job-detail-item">
-                        <span class="detail-icon">📅</span>
-                        <span class="detail-text">Apply by: {job['deadline']} ({days_until_deadline} days left)</span>
-                    </div>
-                </div>
-                
-                <div class="job-description">
-                    {job['description']}
-                </div>
-                
-                <div class="job-requirements">
-                    <strong>Requirements:</strong>
-                    <ul>
-                        {' '.join([f'<li>{req}</li>' for req in job['requirements']])}
-                    </ul>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Action buttons
-            col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
-            
-            with col1:
+            with st.expander(job['title']):
+                st.write(f"Company: {job['company']}")
+                st.write(f"Location: {job['location']} - {job['hours']}")
+                st.write(f"Pay: {job['pay'].replace('$', currency_symbol)}")
+                st.write(f"Deadline: {job['deadline']} ({days_until_deadline} days left)")
+                st.write(job['description'])
+                st.write('Requirements: ' + ', '.join(job['requirements']))
+
                 if already_applied:
                     st.success("✅ Applied")
                 else:
-                    if st.button(f"📝 Apply", key=f"apply_{job['id']}"):
-                        # Add to applications
+                    if st.button(f"Apply", key=f"apply_{job['id']}"):
                         application = {
                             "job_id": job['id'],
                             "job_title": job['title'],
@@ -321,34 +259,13 @@ def main():
                         st.session_state.job_applications.append(application)
                         st.success("Application submitted successfully!")
                         st.rerun()
-            
-            with col2:
-                if st.button(f"💾 Save", key=f"save_{job['id']}"):
-                    st.info("Save feature coming soon!")
-            
-            with col3:
-                if st.button(f"📤 Share", key=f"share_{job['id']}"):
-                    st.info("Share feature coming soon!")
-            
-            st.markdown("---")
     
     # My Applications section
     if st.session_state.job_applications:
         st.subheader("📋 My Applications")
         
         for app in st.session_state.job_applications:
-            st.markdown(f"""
-            <div class="application-item">
-                <div class="application-header">
-                    <div class="application-title">{app['job_title']}</div>
-                    <div class="application-status">{app['status']}</div>
-                </div>
-                <div class="application-details">
-                    <span class="application-company">{app['company']}</span>
-                    <span class="application-date">Applied: {app['applied_date']}</span>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.write(f"{app['job_title']} at {app['company']} - {app['status']} (Applied: {app['applied_date']})")
     
     # Job search tips
     st.subheader("💡 Job Search Tips for International Students")

@@ -1,6 +1,6 @@
 import streamlit as st
 from datetime import datetime, timedelta
-from utils import load_css, check_authentication
+from utils import load_css, check_authentication, render_sidebar
 
 # Page configuration
 st.set_page_config(page_title="Community", page_icon="💬", layout="wide")
@@ -12,20 +12,7 @@ load_css()
 check_authentication()
 
 if st.session_state.get("logged_in", False):
-    with st.sidebar:
-        st.header("Navigation")
-        if st.button("Dashboard"):
-            st.switch_page("streamlit_app.py")
-        if st.button("Expense Tracker"):
-            st.switch_page("pages/Expense_Tracker.py")
-        if st.button("Expense Calculator"):
-            st.switch_page("pages/Expense_Calculator.py")
-        if st.button("Visa Planner"):
-            st.switch_page("pages/Visa_Planner.py")
-        if st.button("Community"):
-            st.switch_page("pages/Community.py")
-        if st.button("Job Board"):
-            st.switch_page("pages/Job_Board.py")
+    render_sidebar()
 
 # Initialize community data
 if 'community_posts' not in st.session_state:
@@ -215,10 +202,8 @@ def main():
         st.info("No posts found in this category. Be the first to start a discussion!")
     else:
         for post in filtered_posts:
-            # Calculate time ago
             post_time = datetime.strptime(post['timestamp'], "%Y-%m-%d %H:%M:%S")
             time_diff = datetime.now() - post_time
-            
             if time_diff.days > 0:
                 time_ago = f"{time_diff.days} day{'s' if time_diff.days > 1 else ''} ago"
             elif time_diff.seconds > 3600:
@@ -227,61 +212,12 @@ def main():
             else:
                 minutes = time_diff.seconds // 60
                 time_ago = f"{minutes} minute{'s' if minutes > 1 else ''} ago"
-            
-            # Post card
-            st.markdown(f"""
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="post-title">{post['title']}</div>
-                    <div class="post-category">{post['category']}</div>
-                </div>
-                
-                <div class="post-meta">
-                    <span class="post-author">👤 {post['author']}</span>
-                    <span class="post-time">🕒 {time_ago}</span>
-                </div>
-                
-                <div class="post-content">
-                    {post['content'][:200]}{'...' if len(post['content']) > 200 else ''}
-                </div>
-                
-                <div class="post-tags">
-                    {' '.join([f'<span class="tag">#{tag}</span>' for tag in post['tags']])}
-                </div>
-                
-                <div class="post-actions">
-                    <div class="post-stats">
-                        <span class="stat-item">👍 {post['likes']} likes</span>
-                        <span class="stat-item">💬 {post['replies']} replies</span>
-                    </div>
-                    <div class="post-buttons">
-                        <button class="action-btn like-btn">👍 Like</button>
-                        <button class="action-btn reply-btn">💬 Reply</button>
-                        <button class="action-btn share-btn">📤 Share</button>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Handle interactions (simplified for demo)
-            col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
-            
-            with col1:
-                if st.button(f"👍 Like", key=f"like_{post['id']}"):
-                    # Find and update the post
-                    for i, p in enumerate(st.session_state.community_posts):
-                        if p['id'] == post['id']:
-                            st.session_state.community_posts[i]['likes'] += 1
-                            break
-                    st.rerun()
-            
-            with col2:
-                if st.button(f"💬 Reply", key=f"reply_{post['id']}"):
-                    st.info("Reply feature coming soon!")
-            
-            with col3:
-                if st.button(f"📤 Share", key=f"share_{post['id']}"):
-                    st.info("Share feature coming soon!")
+
+            with st.expander(post['title']):
+                st.write(f"Category: {post['category']} | Author: {post['author']} | {time_ago}")
+                st.write(post['content'])
+                st.write(f"Tags: {', '.join(post['tags'])}")
+                st.write(f"👍 {post['likes']} | 💬 {post['replies']}")
     
     # Popular topics sidebar
     st.subheader("🔥 Trending Topics")

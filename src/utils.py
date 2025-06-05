@@ -344,3 +344,20 @@ def restore_backup_data(backup_data):
     """Restore data from backup"""
     for key, value in backup_data.items():
         st.session_state[key] = value
+
+def render_sidebar():
+    """Render navigation and quick action links in the sidebar."""
+    with st.sidebar:
+        st.header("Navigation")
+        st.page_link("streamlit_app.py", label="Dashboard")
+        st.page_link("pages/Expense_Tracker.py", label="Expense Tracker")
+        st.page_link("pages/Expense_Calculator.py", label="Expense Calculator")
+        st.page_link("pages/Visa_Planner.py", label="Visa Planner")
+        st.page_link("pages/Community.py", label="Community")
+        st.page_link("pages/Job_Board.py", label="Job Board")
+
+        st.markdown("---")
+        st.header("Quick Actions")
+        st.page_link("pages/Expense_Tracker.py", label="Add Expense")
+        st.page_link("pages/Community.py", label="Create Post")
+        st.page_link("pages/Job_Board.py", label="Apply for Job")
