@@ -171,6 +171,8 @@ def main():
             
             if st.form_submit_button("Update Budget", use_container_width=True):
                 st.session_state.budget = new_budget
+                new_total = sum(new_budget.values())
+                st.toast(f"New total budget: {format_currency(new_total)}")
                 st.success("Budget updated successfully!")
                 st.rerun()
     
