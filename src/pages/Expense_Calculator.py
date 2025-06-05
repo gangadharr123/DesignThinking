@@ -107,68 +107,74 @@ def main():
                 )
 
             with st.expander("🎯 Customize Your Expenses", expanded=False):
-                st.markdown("Adjust the base estimates according to your specific needs:")
-            
-            # Get base costs
-            base_costs = COST_DATA[country][lifestyle].copy()
-            
-            # Custom adjustments
-            custom_costs = {}
-            
-            custom_costs['rent'] = st.slider(
-                "🏠 Rent & Accommodation",
-                min_value=0,
-                max_value=3000,
-                value=base_costs['rent'],
-                step=50,
-                help="Monthly rent, utilities may be separate"
-            )
-            
-            custom_costs['food'] = st.slider(
-                "🍽️ Food & Groceries",
-                min_value=0,
-                max_value=800,
-                value=base_costs['food'],
-                step=25,
-                help="Groceries and dining out"
-            )
-            
-            custom_costs['transport'] = st.slider(
-                "🚌 Transportation",
-                min_value=0,
-                max_value=400,
-                value=base_costs['transport'],
-                step=10,
-                help="Public transport, bike, occasional taxi"
-            )
-            
-            custom_costs['utilities'] = st.slider(
-                "⚡ Utilities",
-                min_value=0,
-                max_value=300,
-                value=base_costs['utilities'],
-                step=10,
-                help="Electricity, water, internet, phone"
-            )
-            
-            custom_costs['entertainment'] = st.slider(
-                "🎉 Entertainment & Social",
-                min_value=0,
-                max_value=500,
-                value=base_costs['entertainment'],
-                step=25,
-                help="Movies, dining out, social activities"
-            )
-            
-            custom_costs['other'] = st.slider(
-                "🛍️ Other Expenses",
-                min_value=0,
-                max_value=400,
-                value=base_costs['other'],
-                step=25,
-                help="Shopping, personal care, miscellaneous"
-            )
+                st.markdown(
+                    "Adjust the base estimates according to your specific needs:"
+                )
+
+                # Get base costs
+                base_costs = COST_DATA[country][lifestyle].copy()
+
     
+                # Custom adjustments
+                custom_costs = {}
+
+                col_a, col_b = st.columns(2)
+
+                with col_a:
+                    custom_costs["rent"] = st.slider(
+                        "🏠 Rent & Accommodation",
+                        min_value=0,
+                        max_value=3000,
+                        value=base_costs["rent"],
+                        step=50,
+                        help="Monthly rent, utilities may be separate",
+                    )
+
+                    custom_costs["transport"] = st.slider(
+                        "🚌 Transportation",
+                        min_value=0,
+                        max_value=400,
+                        value=base_costs["transport"],
+                        step=10,
+                        help="Public transport, bike, occasional taxi",
+                    )
+
+                    custom_costs["entertainment"] = st.slider(
+                        "🎉 Entertainment & Social",
+                        min_value=0,
+                        max_value=500,
+                        value=base_costs["entertainment"],
+                        step=25,
+                        help="Movies, dining out, social activities",
+                    )
+
+                with col_b:
+                    custom_costs["food"] = st.slider(
+                        "🍽️ Food & Groceries",
+                        min_value=0,
+                        max_value=800,
+                        value=base_costs["food"],
+                        step=25,
+                        help="Groceries and dining out",
+                    )
+
+                    custom_costs["utilities"] = st.slider(
+                        "⚡ Utilities",
+                        min_value=0,
+                        max_value=300,
+                        value=base_costs["utilities"],
+                        step=10,
+                        help="Electricity, water, internet, phone",
+                    )
+
+                    custom_costs["other"] = st.slider(
+                        "🛍️ Other Expenses",
+                        min_value=0,
+                        max_value=400,
+                        value=base_costs["other"],
+                        step=25,
+                        help="Shopping, personal care, miscellaneous",
+                    )
     else:  # Custom Budget mode
         col1, col2 = st.columns([1, 1])
         
@@ -183,60 +189,64 @@ def main():
             
                 custom_costs = {}
             
-                custom_costs['rent'] = st.number_input(
-                f"🏠 Rent & Accommodation ({currency_symbol})",
-                min_value=0,
-                max_value=5000,
-                value=800,
-                step=50,
-                help="Set your preferred monthly rent budget"
-            )
-            
-                custom_costs['food'] = st.number_input(
-                f"🍽️ Food & Groceries ({currency_symbol})",
-                min_value=0,
-                max_value=1000,
-                value=300,
-                step=25,
-                help="Set your monthly food budget"
-            )
-            
-                custom_costs['transport'] = st.number_input(
-                f"🚌 Transportation ({currency_symbol})",
-                min_value=0,
-                max_value=500,
-                value=100,
-                step=10,
-                help="Set your monthly transport budget"
-            )
-            
-                custom_costs['utilities'] = st.number_input(
-                f"⚡ Utilities ({currency_symbol})",
-                min_value=0,
-                max_value=400,
-                value=120,
-                step=10,
-                help="Set your monthly utilities budget"
-            )
-            
-                custom_costs['entertainment'] = st.number_input(
-                f"🎉 Entertainment & Social ({currency_symbol})",
-                min_value=0,
-                max_value=800,
-                value=150,
-                step=25,
-                help="Set your monthly entertainment budget"
-            )
-            
-                custom_costs['other'] = st.number_input(
-                f"🛍️ Other Expenses ({currency_symbol})",
-                min_value=0,
-                max_value=500,
-                value=100,
-                step=25,
-                help="Set your budget for miscellaneous expenses"
-            )
-            
+                col_a, col_b = st.columns(2)
+
+                with col_a:
+                    custom_costs["rent"] = st.number_input(
+                        f"🏠 Rent & Accommodation ({currency_symbol})",
+                        min_value=0,
+                        max_value=5000,
+                        value=800,
+                        step=50,
+                        help="Set your preferred monthly rent budget",
+                    )
+
+                    custom_costs["transport"] = st.number_input(
+                        f"🚌 Transportation ({currency_symbol})",
+                        min_value=0,
+                        max_value=500,
+                        value=100,
+                        step=10,
+                        help="Set your monthly transport budget",
+                    )
+
+                    custom_costs["entertainment"] = st.number_input(
+                        f"🎉 Entertainment & Social ({currency_symbol})",
+                        min_value=0,
+                        max_value=800,
+                        value=150,
+                        step=25,
+                        help="Set your monthly entertainment budget",
+                    )
+
+                with col_b:
+                    custom_costs["food"] = st.number_input(
+                        f"🍽️ Food & Groceries ({currency_symbol})",
+                        min_value=0,
+                        max_value=1000,
+                        value=300,
+                        step=25,
+                        help="Set your monthly food budget",
+                    )
+
+                    custom_costs["utilities"] = st.number_input(
+                        f"⚡ Utilities ({currency_symbol})",
+                        min_value=0,
+                        max_value=400,
+                        value=120,
+                        step=10,
+                        help="Set your monthly utilities budget",
+                    )
+
+                    custom_costs["other"] = st.number_input(
+                        f"🛍️ Other Expenses ({currency_symbol})",
+                        min_value=0,
+                        max_value=500,
+                        value=100,
+                        step=25,
+                        help="Set your budget for miscellaneous expenses",
+                    )
+
                 lifestyle = "custom"  # Set lifestyle for custom mode
     
     with col2:
