@@ -9,6 +9,7 @@ from utils import (
     initialize_session_state,
     format_currency,
     get_country_info,
+    render_sidebar,
 )
 from app_config import configure_for_hf_spaces, check_dependencies
 
@@ -63,20 +64,7 @@ initialize_session_state()
 
 # Sidebar navigation
 if st.session_state.get("logged_in", False):
-    with st.sidebar:
-        st.header("Navigation")
-        if st.button("Dashboard"):
-            st.switch_page("streamlit_app.py")
-        if st.button("Expense Tracker"):
-            st.switch_page("pages/Expense_Tracker.py")
-        if st.button("Expense Calculator"):
-            st.switch_page("pages/Expense_Calculator.py")
-        if st.button("Visa Planner"):
-            st.switch_page("pages/Visa_Planner.py")
-        if st.button("Community"):
-            st.switch_page("pages/Community.py")
-        if st.button("Job Board"):
-            st.switch_page("pages/Job_Board.py")
+    render_sidebar()
 
 def main():
     # Check if user is logged in
