@@ -660,6 +660,16 @@
     box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2);
 }
 
+/* Styled select boxes */
+.stSelectbox > div[data-baseweb="select"] {
+    border: 1px solid hsl(var(--primary));
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 6px;
+}
+.stSelectbox > div[data-baseweb="select"]:hover {
+    border-color: hsl(var(--secondary));
+}
+
 /* Feature cards */
 .feature-card {
     background: hsl(var(--card-bg));
