@@ -54,3 +54,9 @@ docker run -p 8501:8501 designthinking
 ```
 
 The Voice Assistant requires access to a microphone.
+
+## Authentication Update
+
+Passwords are now stored using `bcrypt` via the `passlib` library. Any existing
+accounts created with the old SHA-256 scheme will no longer work. Recreate your
+demo accounts after upgrading the dependencies.

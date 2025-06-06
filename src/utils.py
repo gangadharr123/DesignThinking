@@ -2,7 +2,7 @@ import streamlit as st
 import os
 from pathlib import Path
 import json
-import hashlib
+from passlib.hash import bcrypt
 
 def load_css():
     """Load custom CSS styles"""
@@ -33,7 +33,7 @@ def register_user(username, password):
     users = load_users()
     if any(u["username"] == username for u in users):
         return False, "Username already exists."
-    hashed = hashlib.sha256(password.encode()).hexdigest()
+    hashed = bcrypt.hash(password)
     users.append({"username": username, "password": hashed})
     save_users(users)
     return True, "Registration successful."
@@ -41,9 +41,8 @@ def register_user(username, password):
 def check_login(username, password):
     """Check login credentials"""
     users = load_users()
-    hashed = hashlib.sha256(password.encode()).hexdigest()
     for user in users:
-        if user["username"] == username and user["password"] == hashed:
+        if user["username"] == username and bcrypt.verify(password, user["password"]):
             return True
     return False
 
