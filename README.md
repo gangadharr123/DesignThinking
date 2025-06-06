@@ -54,3 +54,7 @@ docker run -p 8501:8501 designthinking
 ```
 
 The Voice Assistant requires access to a microphone.
+
+## Contributing
+
+We welcome pull requests! Please read our [CONTRIBUTING](CONTRIBUTING.md) guide for instructions. Commit messages should briefly summarize your changes so others can follow the project history with ease.
