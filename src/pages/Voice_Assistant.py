@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 from utils import load_css, check_authentication, render_sidebar
 from voice_assistant import (
@@ -31,7 +32,12 @@ st.markdown("Talk to the assistant for quick answers to your questions.")
 if "conversation" not in st.session_state:
     st.session_state.conversation = []
 
-gemini_key = st.session_state.get("gemini_key", st.secrets.get("GEMINI_API_KEY"))
+default_key = os.environ.get("GEMINI_API_KEY", "")
+try:
+    default_key = st.secrets.get("GEMINI_API_KEY", default_key)
+except Exception:
+    pass
+gemini_key = st.session_state.get("gemini_key", default_key)
 gemini_key_input = st.text_input(
     "Gemini API Key", type="password", value=gemini_key or "", help="Required for generating responses."
 )
