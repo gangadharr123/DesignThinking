@@ -24,7 +24,8 @@ The app includes a simple voice assistant powered by the Gemini API. Navigate to
 **Voice Assistant** from the sidebar or dashboard to start a conversation. You
 will need a valid Gemini API key for generating responses. Install the
 `google-generativeai` package listed in `requirements.txt` to enable the Gemini
-client.
+client. The assistant automatically checks for a `GEMINI_API_KEY` value in your
+environment or in `st.secrets` so you don't need to paste it each time.
 
 This project is developed and tested with **Python&nbsp;3.9** (the same version
 used in the Docker image).
@@ -34,6 +35,18 @@ used in the Docker image).
 3. Click **Start Listening** to record your question.
 4. After processing, play back the synthesized answer with the **Play Response**
    button.
+
+Example configuration:
+
+```bash
+export GEMINI_API_KEY="your-key"
+```
+
+or add it to `.streamlit/secrets.toml`:
+
+```toml
+GEMINI_API_KEY = "your-key"
+```
 
 ## Running Locally
 
