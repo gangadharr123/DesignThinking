@@ -31,3 +31,21 @@ client.
 3. Click **Start Listening** to record your question.
 4. After processing, play back the synthesized answer with the **Play Response**
    button.
+
+## Running Locally
+
+Install the dependencies and launch the Streamlit app on your machine:
+
+```bash
+pip install -r requirements.txt
+streamlit run src/streamlit_app.py
+```
+
+Alternatively you can use Docker:
+
+```bash
+docker build -t designthinking .
+docker run -p 8501:8501 designthinking
+```
+
+The Voice Assistant requires access to a microphone.
