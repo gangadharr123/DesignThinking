@@ -1,6 +1,5 @@
 import streamlit as st
 import os
-import pandas as pd
 
 from utils import load_css, check_authentication, render_sidebar, format_currency
 from voice_assistant import (
@@ -68,6 +67,8 @@ if st.button("Start Listening", use_container_width=True):
         except Exception as e:
             text = ""
             st.error(f"Error capturing audio: {e}")
+            if "No default input device" in str(e):
+                st.info("Please connect a microphone and ensure it is set as the default input device.")
     if text:
         st.session_state.conversation.append({"speaker": "You", "text": text})
         response = generate_response(text, api_key=st.session_state.get("gemini_key"), context=context)
