@@ -4,3 +4,4 @@ plotly
 SpeechRecognition
 gTTS
 google-generativeai
+pyaudio
