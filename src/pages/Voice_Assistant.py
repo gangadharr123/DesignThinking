@@ -1,7 +1,8 @@
 import streamlit as st
 import os
+import pandas as pd
 
-from utils import load_css, check_authentication, render_sidebar
+from utils import load_css, check_authentication, render_sidebar, format_currency
 from voice_assistant import (
     record_audio,
     transcribe_audio,
@@ -44,6 +45,21 @@ gemini_key_input = st.text_input(
 if gemini_key_input:
     st.session_state.gemini_key = gemini_key_input
 
+# Build context from budget and expenses if available
+context = ""
+if "budget" in st.session_state:
+    total_budget = sum(st.session_state.budget.values())
+    total_spent = 0.0
+    if "expenses" in st.session_state:
+        total_spent = sum(exp.get("amount", 0) for exp in st.session_state.expenses)
+    remaining = total_budget - total_spent
+    context = (
+        "Budget summary: "
+        f"Total budget {format_currency(total_budget)}, "
+        f"total spent {format_currency(total_spent)}, "
+        f"remaining balance {format_currency(remaining)}."
+    )
+
 if st.button("Start Listening", use_container_width=True):
     with st.spinner("Listening..."):
         try:
@@ -54,7 +70,7 @@ if st.button("Start Listening", use_container_width=True):
             st.error(f"Error capturing audio: {e}")
     if text:
         st.session_state.conversation.append({"speaker": "You", "text": text})
-        response = generate_response(text, api_key=st.session_state.get("gemini_key"))
+        response = generate_response(text, api_key=st.session_state.get("gemini_key"), context=context)
         audio_bytes = text_to_speech(response)
         st.session_state.conversation.append({"speaker": "Assistant", "text": response, "audio": audio_bytes})
     else:

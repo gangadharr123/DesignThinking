@@ -25,8 +25,30 @@ def transcribe_audio(audio: sr.AudioData) -> str:
         return ""
 
 
-def generate_response(prompt: str, api_key: Optional[str] = None, model: str = "gemini-pro") -> str:
-    """Generate a response using the Gemini API."""
+def generate_response(
+    prompt: str,
+    api_key: Optional[str] = None,
+    model: str = "gemini-pro",
+    context: Optional[str] = None,
+) -> str:
+    """Generate a response using the Gemini API.
+
+    Parameters
+    ----------
+    prompt: str
+        The user's prompt.
+    api_key: Optional[str]
+        API key for Gemini. If provided, it overrides environment configuration.
+    model: str
+        Gemini model name.
+    context: Optional[str]
+        Additional context prepended to the prompt to help the model generate
+        informed answers.
+    """
+
+    if context:
+        prompt = f"{context}\n{prompt}"
+
     if api_key:
         genai.configure(api_key=api_key)
     try:
