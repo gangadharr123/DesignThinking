@@ -1,6 +1,5 @@
 import streamlit as st
 import os
-import pandas as pd
 
 from utils import load_css, check_authentication, render_sidebar, format_currency
 from voice_assistant import (
