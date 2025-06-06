@@ -26,6 +26,9 @@ will need a valid Gemini API key for generating responses. Install the
 `google-generativeai` package listed in `requirements.txt` to enable the Gemini
 client.
 
+This project is developed and tested with **Python&nbsp;3.9** (the same version
+used in the Docker image).
+
 1. Enter your API key when prompted.
 2. Ensure your device has a working microphone configured as the default input device.
 3. Click **Start Listening** to record your question.
@@ -34,9 +37,11 @@ client.
 
 ## Running Locally
 
-Install the dependencies and launch the Streamlit app on your machine:
+Create and activate a virtual environment, then install the dependencies and launch the Streamlit app on your machine:
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 streamlit run src/streamlit_app.py
 ```
