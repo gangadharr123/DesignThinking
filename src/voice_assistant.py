@@ -6,6 +6,10 @@ from gtts import gTTS
 import google.generativeai as genai
 
 
+class ResponseGenerationError(Exception):
+    """Raised when the Gemini API fails to generate a response."""
+
+
 def record_audio(timeout: int = 5, phrase_time_limit: int = 10) -> sr.AudioData:
     """Record audio from the default microphone.
 
@@ -67,7 +71,7 @@ def generate_response(
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
-        return f"Error: {e}"
+        raise ResponseGenerationError(str(e))
 
 
 def text_to_speech(text: str) -> io.BytesIO:
