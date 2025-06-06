@@ -4,5 +4,5 @@ streamlit
 plotly
 SpeechRecognition
 gTTS
-google-generativeai
+google-generativeai==0.4.1
 pyaudio
