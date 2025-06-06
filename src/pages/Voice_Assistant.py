@@ -7,6 +7,7 @@ from voice_assistant import (
     transcribe_audio,
     generate_response,
     text_to_speech,
+    ResponseGenerationError,
 )
 
 st.set_page_config(page_title="Voice Assistant", page_icon="🎙️", layout="wide")
@@ -71,9 +72,21 @@ if st.button("Start Listening", use_container_width=True):
                 st.info("Please connect a microphone and ensure it is set as the default input device.")
     if text:
         st.session_state.conversation.append({"speaker": "You", "text": text})
-        response = generate_response(text, api_key=st.session_state.get("gemini_key"), context=context)
-        audio_bytes = text_to_speech(response)
-        st.session_state.conversation.append({"speaker": "Assistant", "text": response, "audio": audio_bytes})
+        try:
+            response = generate_response(
+                text,
+                api_key=st.session_state.get("gemini_key"),
+                context=context,
+            )
+        except ResponseGenerationError as e:
+            st.error(f"Error generating response: {e}")
+            response = None
+
+        if response:
+            audio_bytes = text_to_speech(response)
+            st.session_state.conversation.append(
+                {"speaker": "Assistant", "text": response, "audio": audio_bytes}
+            )
     else:
         st.warning("Could not understand audio.")
 
