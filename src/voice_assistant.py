@@ -7,11 +7,22 @@ import google.generativeai as genai
 
 
 def record_audio(timeout: int = 5, phrase_time_limit: int = 10) -> sr.AudioData:
-    """Record audio from the default microphone."""
+    """Record audio from the default microphone.
+
+    Raises
+    ------
+    RuntimeError
+        If no default input device is available.
+    """
     recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        audio = recognizer.listen(source, timeout=timeout, phrase_time_limit=phrase_time_limit)
-    return audio
+    try:
+        if not sr.Microphone.list_microphone_names():
+            raise RuntimeError("No default input device available")
+        with sr.Microphone() as source:
+            audio = recognizer.listen(source, timeout=timeout, phrase_time_limit=phrase_time_limit)
+        return audio
+    except OSError as e:
+        raise RuntimeError("No default input device available") from e
 
 
 def transcribe_audio(audio: sr.AudioData) -> str:

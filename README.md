@@ -27,6 +27,7 @@ will need a valid Gemini API key for generating responses. Install the
 client.
 
 1. Enter your API key when prompted.
-2. Click **Start Listening** to record your question.
-3. After processing, play back the synthesized answer with the **Play Response**
+2. Ensure your device has a working microphone configured as the default input device.
+3. Click **Start Listening** to record your question.
+4. After processing, play back the synthesized answer with the **Play Response**
    button.
