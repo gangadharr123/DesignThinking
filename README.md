@@ -1,17 +1,6 @@
----
-title: DesignThinking
-emoji: 🚀
-colorFrom: red
-colorTo: red
-sdk: docker
-app_port: 8501
-tags:
-- streamlit
-pinned: false
-short_description: Prototype for Design Thinking group project
----
+# DesignThinking
 
-# Welcome to Streamlit!
+## Welcome to Streamlit!
 
 Edit `/src/streamlit_app.py` to customize this app to your heart's desire. :heart:
 
@@ -54,3 +43,4 @@ docker run -p 8501:8501 designthinking
 ```
 
 The Voice Assistant requires access to a microphone.
+
